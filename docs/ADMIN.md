@@ -8,9 +8,14 @@
 | **employee** | Imara staff | Everything a user can, plus: see every customer, profile and application; change application status; add internal notes |
 | **admin** | Site owners | Everything an employee can, plus: change roles; create, invite, suspend, restore and delete accounts; set passwords and send reset links; change emails; log a user out everywhere; activity log; site health and database status |
 
-The first administrator is **fayann506@gmail.com**.
+**Administration belongs to the site owner only: fayann506@gmail.com (Faith Ndung'u).**
 
-Roles live in the `user_roles` table (no row means `user`). Users can never change their own role. Only an admin can, through the console. The database refuses to remove or delete the **last** administrator.
+- No other account can ever be made an administrator, whether through the console, the admin function, or even direct database access with the secret key. The database refuses (`user_roles_owner_only_admin` trigger, migration `20261006220000_owner_only_admin.sql`).
+- The owner's account can never lose the administrator role.
+- The lock is by account id, so it still holds if the owner changes the account's email address.
+- The owner can make people **employees** (staff tools, no admin powers) or turn them back into **customers**.
+
+Roles live in the `user_roles` table (no row means `user`). Users can never change their own role.
 
 ## The staff console: `/admin.html`
 
@@ -31,7 +36,7 @@ Staff see a **Staff console** link on their account page. Customers who open `/a
 - **Email an invite:** they get an email, set their own password, and land on the site. Needs custom SMTP (see AUTH_SETUP.md, step 2) unless they're on your Supabase team.
 - **Set a password:** the account works immediately. Share the password privately and ask them to change it from My account.
 
-Choose **Employee** as the role. To promote an existing customer, open them under Users and change their role.
+Choose **Employee** as the role. (Administrator isn't offered: only the site owner is an administrator.) To give an existing customer staff tools, open them under Users and change their role to Employee.
 
 ## How it's protected
 

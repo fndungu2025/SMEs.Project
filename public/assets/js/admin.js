@@ -51,7 +51,8 @@
   function bytes(n) { n = Number(n) || 0; var u = ['B', 'KB', 'MB', 'GB']; var i = 0; while (n >= 1024 && i < 3) { n /= 1024; i++; } return (i ? n.toFixed(1) : n) + ' ' + u[i]; }
   function err(e) {
     var m = e && (e.message || e.error_description || e.error) || String(e);
-    if (/cannot remove the last administrator/i.test(m)) return 'You can’t remove the last administrator.';
+    if (/cannot remove the last administrator|always stays an administrator/i.test(m)) return 'The site owner always stays an administrator.';
+    if (/Only the site owner can be an administrator/i.test(m)) return 'Only the site owner can be an administrator.';
     if (/Not allowed|Only administrators|permission denied/i.test(m)) return 'Your role doesn’t allow this.';
     return A.friendlyError(e) === 'Something went wrong. Please try again.' && m ? m : A.friendlyError(e);
   }
@@ -357,6 +358,12 @@
     $('ud-initials').textContent = P.initials(u.full_name || u.email); $('ud-initials').hidden = false;
     $('ud-img').hidden = true;
     $('ud-role').value = u.role;
+    // The administrator role belongs to the site owner only; it can't be given or taken away here.
+    var ownerRow = u.role === 'admin';
+    $('ud-role').disabled = ownerRow; $('ud-role-save').disabled = ownerRow;
+    $('ud-role-hint').textContent = ownerRow
+      ? 'Site owner. This account is always the administrator, and no one else can be.'
+      : 'Employees see all customers and applications and can change application status. Only the site owner is an administrator.';
     $('ud-confirm').hidden = !!u.email_confirmed_at;
     $('ud-suspend').hidden = isSuspended(u); $('ud-unsuspend').hidden = !isSuspended(u);
     $('ud-password').value = ''; $('ud-new-email').value = ''; $('ud-delete-confirm').value = '';

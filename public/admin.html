@@ -171,10 +171,10 @@
       <h3>Role</h3>
       <div class="inline-form">
         <label class="sr-only" for="ud-role">Role</label>
-        <select class="input select" id="ud-role"><option value="user">Customer (user)</option><option value="employee">Employee</option><option value="admin">Administrator</option></select>
+        <select class="input select" id="ud-role"><option value="user">Customer (user)</option><option value="employee">Employee</option><option value="admin" disabled>Administrator (site owner only)</option></select>
         <button type="button" class="btn btn-secondary" id="ud-role-save">Save role</button>
       </div>
-      <p class="hint">Employees see all customers and applications and can change application status. Administrators can do everything.</p>
+      <p class="hint" id="ud-role-hint">Employees see all customers and applications and can change application status. Only the site owner is an administrator.</p>
     </div>
 
     <div class="ud-block admin-only">
@@ -233,7 +233,7 @@
       </div>
       <div class="auth-field"><label for="add-email">Email</label><input class="input" id="add-email" type="email" autocomplete="off" required><span class="err">Enter a valid email address.</span></div>
       <div class="auth-field"><label for="add-name">Full name</label><input class="input" id="add-name" autocomplete="off" maxlength="120"></div>
-      <div class="auth-field"><label for="add-role">Role</label><select class="input select" id="add-role"><option value="user">Customer (user)</option><option value="employee" selected>Employee</option><option value="admin">Administrator</option></select></div>
+      <div class="auth-field"><label for="add-role">Role</label><select class="input select" id="add-role"><option value="user">Customer (user)</option><option value="employee" selected>Employee</option></select></div>
       <div class="auth-field" id="add-pw-field" hidden><label for="add-password">Password</label><input class="input" id="add-password" type="text" autocomplete="off"><p class="hint">Share it with them privately and ask them to change it.</p><span class="err">8–72 characters with letters and numbers.</span></div>
       <button type="submit" class="btn btn-primary blueprint auth-submit" id="add-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Send invite</button>
     </form>

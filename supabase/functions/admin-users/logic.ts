@@ -65,6 +65,8 @@ export async function handle(method: string, authHeader: string | null, body: un
       if (!EMAIL_RE.test(email)) fail(400, 'Enter a valid email address.');
       const role = (b.role ?? 'user') as Role;
       if (!ROLES.includes(role)) fail(400, 'Unknown role.');
+      // Administration belongs to the site owner only (also enforced by the database).
+      if (role === 'admin') fail(400, 'Only the site owner can be an administrator. Choose Employee or Customer.');
       const fullName = typeof b.full_name === 'string' ? b.full_name.trim().slice(0, 120) : undefined;
       let created: AuthUser;
       if (action === 'create_user') {
