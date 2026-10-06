@@ -200,7 +200,8 @@ textarea.input{min-height:110px;padding:10px 12px;font-size:16px;resize:vertical
 .pc-name{font-family:var(--font-heading);font-weight:600;font-size:22px;text-transform:uppercase;margin:0 0 2px;overflow-wrap:anywhere}
 .pc-line{margin:0;font-size:14px;color:color-mix(in srgb,var(--color-text) 75%,transparent)}
 .pc-line:empty{display:none}
-.pc-facts{display:grid;grid-template-columns:auto 1fr;gap:0 16px;margin:12px 0 0;font-size:14px}
+.pc-facts{display:grid;grid-template-columns:auto 1fr;gap:0;margin:12px 0 0;font-size:14px}
+.pc-facts dt{padding-right:16px!important}
 .pc-facts:empty{display:none}
 .pc-facts dt,.pc-facts dd{margin:0;padding:8px 0;border-top:1px solid var(--color-divider)}
 .pc-facts dt{color:color-mix(in srgb,var(--color-text) 65%,transparent)}
@@ -210,3 +211,6 @@ textarea.input{min-height:110px;padding:10px 12px;font-size:16px;resize:vertical
 .profile-banner strong{display:block;font-family:var(--font-heading);font-size:20px;text-transform:uppercase}
 .profile-banner span{font-size:14px;color:color-mix(in srgb,var(--color-text) 78%,transparent)}
 .auth-header{background:var(--color-bg);z-index:20}
+
+.auth-header nav a.staff-link{font-weight:600;color:#fff;background:#0F2557;padding:6px 12px}
+.auth-header nav a.staff-link:hover{color:#fff;background:#1D4ED8}

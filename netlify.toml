@@ -29,6 +29,12 @@
     Cache-Control = "no-store"
 
 [[headers]]
+  for = "/admin.html"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
   for = "/profile.html"
   [headers.values]
     Cache-Control = "no-store"
@@ -71,4 +77,9 @@
 [[redirects]]
   from = "/profile"
   to = "/profile.html"
+  status = 301
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
   status = 301

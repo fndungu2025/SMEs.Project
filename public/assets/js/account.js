@@ -191,6 +191,13 @@
       else if (linkError) say(notice(), 'err', A.friendlyError({ code: linkError.code }));
       if (location.search) history.replaceState(null, '', location.pathname);
       loadApps();
+      // Staff get a link to the console. The console re-checks the role itself.
+      sb.rpc('my_role').then(function (r) {
+        if (r.data === 'admin' || r.data === 'employee') {
+          $('staff-link').hidden = false;
+          $('who').textContent = 'Logged in as ' + user.email + ' \u00b7 ' + (r.data === 'admin' ? 'Administrator' : 'Employee');
+        }
+      });
     });
   });
 

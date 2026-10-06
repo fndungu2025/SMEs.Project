@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en-KE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff console — Imara Capital</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F2557">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/industry.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/admin.css">
+<script src="/assets/vendor/supabase-js-2.117.2.js" defer></script>
+<script src="/assets/js/supabase-config.js" defer></script>
+<script src="/assets/js/imara-auth.js" defer></script>
+<script src="/assets/js/imara-profile.js" defer></script>
+<script src="/assets/js/admin.js" defer></script>
+</head>
+<body class="auth-page-loading">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="stripe" aria-hidden="true"></div>
+<header class="auth-header">
+  <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">I</span>Imara Capital <span class="console-tag">Staff</span></a>
+  <nav aria-label="Console navigation">
+    <a href="/account.html">My account</a>
+    <a href="/">Website</a>
+    <button type="button" class="btn btn-secondary" id="signout-btn" style="min-height:36px;padding:0 14px" data-requires-session>Log out</button>
+  </nav>
+</header>
+
+<main id="main" class="acct console">
+  <p class="loading" id="loading" role="status">Checking your access…</p>
+
+  <section id="denied" class="blueprint acct-section" hidden>
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <h1 style="font-size:32px;text-transform:uppercase;margin:0 0 8px">Staff only</h1>
+    <p class="sub">This area is for Imara Capital staff. If you work here, ask an administrator to give your account the employee role.</p>
+    <a href="/account.html" class="btn btn-secondary" style="min-height:44px;padding:0 18px">Back to my account</a>
+  </section>
+
+  <div data-requires-session id="console">
+    <div class="acct-head">
+      <div>
+        <span class="auth-eyebrow" id="role-eyebrow">Staff console</span>
+        <h1>Staff console</h1>
+        <p class="who" id="who"></p>
+      </div>
+      <div class="refresh-box">
+        <button type="button" class="btn btn-secondary" id="refresh-btn" style="min-height:40px;padding:0 16px">Refresh</button>
+        <span class="muted-small" id="last-refresh"></span>
+      </div>
+    </div>
+
+    <p class="notice" id="notice" role="status" aria-live="polite"></p>
+
+    <div class="tabs" role="tablist" aria-label="Console sections">
+      <button type="button" role="tab" class="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true" data-tab="overview">Overview</button>
+      <button type="button" role="tab" class="tab" id="tab-users" aria-controls="panel-users" aria-selected="false" data-tab="users" tabindex="-1">Users</button>
+      <button type="button" role="tab" class="tab" id="tab-apps" aria-controls="panel-apps" aria-selected="false" data-tab="apps" tabindex="-1">Applications</button>
+      <button type="button" role="tab" class="tab admin-only" id="tab-activity" aria-controls="panel-activity" aria-selected="false" data-tab="activity" tabindex="-1">Activity log</button>
+      <button type="button" role="tab" class="tab admin-only" id="tab-system" aria-controls="panel-system" aria-selected="false" data-tab="system" tabindex="-1">System</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" class="panel">
+      <div class="admin-only">
+        <div class="section-head">
+          <h2>Site health</h2>
+          <label class="auto-refresh"><input type="checkbox" id="auto-refresh" checked> Re-check every minute</label>
+        </div>
+        <div class="health-grid" id="health"></div>
+      </div>
+
+      <div class="section-head"><h2>At a glance</h2></div>
+      <div class="kpi-grid" id="kpis"></div>
+
+      <div class="chart-grid">
+        <figure class="blueprint chart-card">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <figcaption class="chart-title">New sign-ups, last 14 days</figcaption>
+          <div id="chart-signups" class="col-chart" role="img"></div>
+        </figure>
+        <figure class="blueprint chart-card">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <figcaption class="chart-title">Applications by status</figcaption>
+          <div id="chart-status" class="bar-list"></div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- USERS -->
+    <section role="tabpanel" id="panel-users" aria-labelledby="tab-users" class="panel" hidden>
+      <div class="toolbar">
+        <label class="sr-only" for="user-search">Search users</label>
+        <input class="input" id="user-search" type="search" placeholder="Search name, email, phone or business" autocomplete="off">
+        <label class="sr-only" for="user-role-filter">Filter by role</label>
+        <select class="input select" id="user-role-filter">
+          <option value="">All roles</option><option value="admin">Administrators</option><option value="employee">Employees</option><option value="user">Customers</option>
+        </select>
+        <button type="button" class="btn btn-primary admin-only" id="add-user-btn" style="color:var(--color-bg);min-height:44px;padding:0 18px">Add user</button>
+      </div>
+      <div class="table-wrap"><table class="table data-table" id="users-table">
+        <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Profile</th><th scope="col">Apps</th><th scope="col">Joined</th><th scope="col">Last log-in</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="pager"><button type="button" class="btn btn-secondary" id="users-prev">Previous</button><span id="users-page" class="muted-small"></span><button type="button" class="btn btn-secondary" id="users-next">Next</button></div>
+    </section>
+
+    <!-- APPLICATIONS -->
+    <section role="tabpanel" id="panel-apps" aria-labelledby="tab-apps" class="panel" hidden>
+      <div class="toolbar">
+        <label class="sr-only" for="app-search">Search applications</label>
+        <input class="input" id="app-search" type="search" placeholder="Search applicant, business or phone" autocomplete="off">
+        <label class="sr-only" for="app-status-filter">Filter by status</label>
+        <select class="input select" id="app-status-filter">
+          <option value="">All statuses</option>
+          <option value="submitted">Submitted</option><option value="in_review">In review</option><option value="offer_sent">Offer sent</option>
+          <option value="disbursed">Disbursed</option><option value="declined">Declined</option><option value="withdrawn">Withdrawn</option>
+        </select>
+      </div>
+      <div class="table-wrap"><table class="table data-table" id="apps-table">
+        <thead><tr><th scope="col">Sent</th><th scope="col">Applicant</th><th scope="col">Phone</th><th scope="col">Amount</th><th scope="col">Term</th><th scope="col">Branch</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Notes</span></th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="pager"><button type="button" class="btn btn-secondary" id="apps-prev">Previous</button><span id="apps-page" class="muted-small"></span><button type="button" class="btn btn-secondary" id="apps-next">Next</button></div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section role="tabpanel" id="panel-activity" aria-labelledby="tab-activity" class="panel admin-only" hidden>
+      <div class="toolbar">
+        <label class="sr-only" for="activity-filter">Filter activity</label>
+        <select class="input select" id="activity-filter">
+          <option value="">All activity</option>
+          <option value="role.">Role changes</option>
+          <option value="application.">Application status</option>
+          <option value="user.password">Passwords</option>
+          <option value="user.suspended,user.unsuspended">Suspensions</option>
+          <option value="user.created,user.invited,user.deleted">Users added or deleted</option>
+        </select>
+      </div>
+      <ol class="activity" id="activity"></ol>
+    </section>
+
+    <!-- SYSTEM -->
+    <section role="tabpanel" id="panel-system" aria-labelledby="tab-system" class="panel admin-only" hidden>
+      <div class="sys-grid" id="system"></div>
+    </section>
+  </div>
+</main>
+
+<!-- User details -->
+<div class="dialog-backdrop" id="user-dialog" hidden>
+  <div class="dialog blueprint app-dialog wide-dialog" role="dialog" aria-modal="true" aria-labelledby="ud-name">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="ud-head">
+      <div class="avatar blueprint" id="ud-avatar"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><img id="ud-img" alt="" hidden><span id="ud-initials" aria-hidden="true">?</span></div>
+      <div class="ud-title">
+        <h2 class="dialog-title" id="ud-name">—</h2>
+        <p class="pc-line" id="ud-email"></p>
+        <p class="ud-tags" id="ud-tags"></p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-icon dialog-x" data-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+    </div>
+    <p class="notice" id="ud-notice" role="status" aria-live="polite"></p>
+    <dl class="pc-facts" id="ud-facts"></dl>
+
+    <div class="ud-block admin-only">
+      <h3>Role</h3>
+      <div class="inline-form">
+        <label class="sr-only" for="ud-role">Role</label>
+        <select class="input select" id="ud-role"><option value="user">Customer (user)</option><option value="employee">Employee</option><option value="admin">Administrator</option></select>
+        <button type="button" class="btn btn-secondary" id="ud-role-save">Save role</button>
+      </div>
+      <p class="hint">Employees see all customers and applications and can change application status. Administrators can do everything.</p>
+    </div>
+
+    <div class="ud-block admin-only">
+      <h3>Password &amp; log-in</h3>
+      <div class="acct-actions">
+        <button type="button" class="btn btn-secondary" data-action="send_password_reset">Email a reset link</button>
+        <button type="button" class="btn btn-secondary" data-action="confirm_email" id="ud-confirm">Mark email confirmed</button>
+        <button type="button" class="btn btn-secondary" data-action="sign_out_everywhere">Log out everywhere</button>
+      </div>
+      <form class="inline-form" id="ud-password-form" novalidate>
+        <label class="sr-only" for="ud-password">New password</label>
+        <input class="input" id="ud-password" type="text" autocomplete="off" placeholder="Set a new password (8+ letters & numbers)">
+        <button type="submit" class="btn btn-secondary">Set password</button>
+      </form>
+      <form class="inline-form" id="ud-email-form" novalidate>
+        <label class="sr-only" for="ud-new-email">New email</label>
+        <input class="input" id="ud-new-email" type="email" autocomplete="off" placeholder="Change email address">
+        <button type="submit" class="btn btn-secondary">Change email</button>
+      </form>
+    </div>
+
+    <div class="ud-block">
+      <h3>Applications</h3>
+      <div id="ud-apps"><p class="loading">Loading…</p></div>
+    </div>
+
+    <div class="ud-block admin-only danger-zone">
+      <h3>Danger zone</h3>
+      <div class="acct-actions">
+        <button type="button" class="btn btn-secondary" id="ud-suspend" data-action="suspend">Suspend account</button>
+        <button type="button" class="btn btn-secondary" id="ud-unsuspend" data-action="unsuspend">Restore account</button>
+      </div>
+      <form class="inline-form" id="ud-delete-form" novalidate>
+        <label class="sr-only" for="ud-delete-confirm">Type the email to confirm deletion</label>
+        <input class="input" id="ud-delete-confirm" type="text" autocomplete="off" placeholder="Type the email to delete permanently">
+        <button type="submit" class="btn btn-danger">Delete user</button>
+      </form>
+      <p class="hint">Deleting removes the account, profile, photo record and every application. It can't be undone.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Add user -->
+<div class="dialog-backdrop" id="add-dialog" hidden>
+  <div class="dialog blueprint app-dialog" role="dialog" aria-modal="true" aria-labelledby="add-title">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+      <h2 class="dialog-title" id="add-title" style="font-size:28px;text-transform:uppercase;margin:0">Add user</h2>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+    </div>
+    <p class="notice" id="add-notice" role="status" aria-live="polite"></p>
+    <form id="add-form" novalidate>
+      <div class="seg" role="radiogroup" aria-label="How to add" style="display:flex;margin:12px 0 16px">
+        <label class="seg-opt" style="flex:1;justify-content:center;min-height:42px"><input type="radio" name="add-mode" value="invite" checked>Email an invite</label>
+        <label class="seg-opt" style="flex:1;justify-content:center;min-height:42px"><input type="radio" name="add-mode" value="create">Set a password</label>
+      </div>
+      <div class="auth-field"><label for="add-email">Email</label><input class="input" id="add-email" type="email" autocomplete="off" required><span class="err">Enter a valid email address.</span></div>
+      <div class="auth-field"><label for="add-name">Full name</label><input class="input" id="add-name" autocomplete="off" maxlength="120"></div>
+      <div class="auth-field"><label for="add-role">Role</label><select class="input select" id="add-role"><option value="user">Customer (user)</option><option value="employee" selected>Employee</option><option value="admin">Administrator</option></select></div>
+      <div class="auth-field" id="add-pw-field" hidden><label for="add-password">Password</label><input class="input" id="add-password" type="text" autocomplete="off"><p class="hint">Share it with them privately and ask them to change it.</p><span class="err">8–72 characters with letters and numbers.</span></div>
+      <button type="submit" class="btn btn-primary blueprint auth-submit" id="add-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Send invite</button>
+    </form>
+  </div>
+</div>
+
+<!-- Notes -->
+<div class="dialog-backdrop" id="notes-dialog" hidden>
+  <div class="dialog blueprint app-dialog" role="dialog" aria-modal="true" aria-labelledby="notes-title">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+      <div><h2 class="dialog-title" id="notes-title" style="font-size:26px;text-transform:uppercase;margin:0">Internal notes</h2><p class="pc-line" id="notes-sub"></p></div>
+      <button type="button" class="btn btn-ghost btn-icon" data-close aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+    </div>
+    <p class="hint">Staff only. Customers never see these notes.</p>
+    <ol class="notes" id="notes-list"></ol>
+    <p class="notice" id="notes-notice" role="status" aria-live="polite"></p>
+    <form id="notes-form" novalidate>
+      <label class="sr-only" for="notes-body">New note</label>
+      <textarea class="input" id="notes-body" maxlength="2000" rows="3" placeholder="e.g. Called 10:40, statements received, visit booked Thursday"></textarea>
+      <button type="submit" class="btn btn-primary" style="color:var(--color-bg);margin-top:10px;min-height:44px;padding:0 18px">Add note</button>
+    </form>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+</body>
+</html>
