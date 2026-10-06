@@ -106,6 +106,29 @@
     });
   }
 
+  /* Safety net: if a page fails while still showing its "Loading…" message,
+     replace it with an explanation and a Reload button instead of spinning forever. */
+  function pageStuck(reason) {
+    var loading = document.getElementById('loading');
+    if (!loading || loading.hidden || loading.dataset.failed) return;
+    loading.dataset.failed = '1';
+    loading.className = 'notice notice-err';
+    loading.textContent = reason + ' ';
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'link-btn'; btn.textContent = 'Reload the page';
+    btn.addEventListener('click', function () { location.reload(); });
+    loading.appendChild(btn);
+  }
+  window.addEventListener('error', function () {
+    pageStuck('Something went wrong loading this page.');
+  });
+  window.addEventListener('unhandledrejection', function () {
+    pageStuck('Something went wrong loading this page.');
+  });
+  setTimeout(function () {
+    pageStuck('This is taking longer than it should. Check your connection, then');
+  }, 20000);
+
   window.ImaraAuth = {
     client: client,
     MIN_PASSWORD: MIN_PASSWORD,

@@ -12,10 +12,22 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://ownmlbmnpadfbedcwrph.supabase.co; connect-src 'self' https://ownmlbmnpadfbedcwrph.supabase.co; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
 
+# Scripts and styles must always match the page that loads them, so browsers
+# re-check them on every visit (Netlify answers "304 Not Modified" when unchanged).
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=3600, must-revalidate"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
 
 [[headers]]
   for = "/assets/vendor/*"
