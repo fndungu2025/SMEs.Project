@@ -30,10 +30,10 @@ Open <https://supabase.com/dashboard/project/ownmlbmnpadfbedcwrph>.
 
 **Authentication → URL Configuration**
 
-- **Site URL:** your Netlify address, e.g. `https://imara-capital.netlify.app` (or your custom domain).
+- **Site URL:** your Netlify address, e.g. `https://smesproject.netlify.app` (or your custom domain).
 - **Redirect URLs:** add each of these, replacing the domain with yours:
-  - `https://imara-capital.netlify.app/**`
-  - `https://*--imara-capital.netlify.app/**` (Netlify deploy previews; optional)
+  - `https://smesproject.netlify.app/**`
+  - `https://*--smesproject.netlify.app/**` (Netlify deploy previews; optional)
   - `http://localhost:8000/**` (local testing; optional)
 
 Without this, links in confirmation, magic-link and reset emails send people to the wrong place, or are refused.
