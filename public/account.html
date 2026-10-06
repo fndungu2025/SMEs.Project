@@ -15,6 +15,7 @@
 <script src="/assets/vendor/supabase-js-2.117.2.js" defer></script>
 <script src="/assets/js/supabase-config.js" defer></script>
 <script src="/assets/js/imara-auth.js" defer></script>
+<script src="/assets/js/imara-profile.js" defer></script>
 <script src="/assets/js/account.js" defer></script>
 </head>
 <body class="auth-page-loading">
@@ -34,6 +35,11 @@
 
   <div data-requires-session>
     <p class="notice" id="notice" role="status" aria-live="polite"></p>
+    <div class="profile-banner blueprint" id="profile-banner" hidden>
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div><strong>Finish creating your profile</strong><span>It takes three minutes, and your officer has what they need before calling.</span></div>
+      <a href="/profile.html" class="btn btn-primary" style="color:var(--color-bg);min-height:44px;padding:0 18px">Create my profile</a>
+    </div>
 
     <div class="acct-head">
       <div>
@@ -54,24 +60,26 @@
 
       <section class="blueprint acct-section" aria-labelledby="details-title">
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-        <h2 id="details-title">My details</h2>
-        <p class="sub">We pre-fill your applications with these.</p>
-        <p class="notice" id="details-notice" role="status" aria-live="polite"></p>
-        <form id="details-form" novalidate>
-          <div class="auth-field"><label for="pf-name">Full name</label><input class="input" id="pf-name" autocomplete="name" maxlength="120"><span class="err">Enter your name.</span></div>
-          <div class="auth-field"><label for="pf-phone">Phone number</label><input class="input" id="pf-phone" type="tel" autocomplete="tel" placeholder="07XX XXX XXX"><span class="err">Enter a Kenyan mobile number, e.g. 0712 345 678.</span></div>
-          <div class="auth-field"><label for="pf-business">Business name</label><input class="input" id="pf-business" autocomplete="organization" maxlength="160"></div>
-          <div class="auth-field"><label for="pf-city">Where is your business?</label>
-            <select class="input select" id="pf-city">
-              <option value="">Choose…</option><option>Nairobi</option><option>Mombasa</option><option>Nakuru</option><option>Eldoret</option><option>Elsewhere</option>
-            </select></div>
-          <div class="auth-field"><label>Preferred language</label>
-            <div class="seg" role="radiogroup" aria-label="Preferred language" style="display:flex">
-              <label class="seg-opt" style="flex:1;justify-content:center;min-height:42px"><input type="radio" name="pf-lang" value="Kiswahili" checked>Kiswahili</label>
-              <label class="seg-opt" style="flex:1;justify-content:center;min-height:42px"><input type="radio" name="pf-lang" value="English">English</label>
-            </div></div>
-          <button type="submit" class="btn btn-primary blueprint auth-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Save details</button>
-        </form>
+        <h2 id="details-title">My profile</h2>
+        <p class="sub">We pre-fill your applications with these, and your officer sees them before calling.</p>
+        <div class="profile-card">
+          <div class="avatar blueprint" id="pc-avatar">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <img id="pc-img" alt="" hidden>
+            <span id="pc-initials" aria-hidden="true">?</span>
+          </div>
+          <div class="profile-card-body">
+            <p class="pc-name" id="pc-name">—</p>
+            <p class="pc-line" id="pc-business"></p>
+            <p class="pc-line" id="pc-place"></p>
+          </div>
+        </div>
+        <div class="completion" style="margin:20px 0 4px">
+          <span class="completion-label"><span id="pc-pct">0</span>% complete</span>
+          <div class="completion-bar" aria-hidden="true"><span id="pc-bar"></span></div>
+        </div>
+        <dl class="pc-facts" id="pc-facts"></dl>
+        <a href="/profile.html" class="btn btn-primary blueprint auth-submit" id="pc-edit" style="display:flex;margin-top:20px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><span id="pc-edit-label">Create my profile</span></a>
       </section>
 
       <section class="blueprint acct-section" aria-labelledby="security-title">

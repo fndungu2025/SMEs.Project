@@ -9,6 +9,7 @@ Landing page for **Imara Capital**, business loans for problem-aware Kenyan SMEs
 - **30-second eligibility check** by location, revenue band and time trading, with a tailored answer
 - **Application call-back form** via [Netlify Forms](https://docs.netlify.com/forms/setup/) (`loan-application`). It captures the calculator and eligibility answers and uses a honeypot for spam.
 - **Email login (Supabase Auth)**: create account, confirm email, log in, forgot/reset password, email log-in link, and an account page with application status, profile, password/email change and log out on all devices. Logged-in visitors get their applications pre-filled and saved to their account. **Setup steps: [docs/AUTH_SETUP.md](docs/AUTH_SETUP.md).**
+- **Borrower profiles**: each user creates their own profile (photo, contact details, business details) in a two-step flow at `/profile.html`. New sign-ups are guided there after confirming their email, and the account page shows a profile card with completeness.
 - Stories, FAQ, final CTA, plus privacy, thank-you and 404 pages
 - Responsive down to 320px, keyboard accessible (focus-trapped dialog, skip link), with security headers and a CSP in `netlify.toml`
 
@@ -18,13 +19,15 @@ Landing page for **Imara Capital**, business loans for problem-aware Kenyan SMEs
 public/                 ← Netlify publish directory
   index.html
   login.html  account.html  reset-password.html   email login
+  profile.html                                  create / edit borrower profile
   privacy.html  thanks.html  404.html
   assets/css/industry.css   design-system tokens and components
   assets/css/site.css       page-level styles
   assets/js/main.js         calculator, eligibility and form logic
   assets/js/supabase-config.js   Supabase URL + publishable key (public by design)
   assets/js/imara-auth.js        shared auth client and helpers
-  assets/js/login.js, account.js, reset-password.js
+  assets/js/login.js, account.js, reset-password.js, profile.js
+  assets/js/imara-profile.js     profile options, save, photo upload
   assets/js/session-hint.js, account-bridge.js   home-page login integration
   assets/vendor/            self-hosted supabase-js
   assets/img/               optimized photos (WebP + JPEG)

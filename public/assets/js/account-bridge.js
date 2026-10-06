@@ -37,7 +37,7 @@
         var session = res.data && res.data.session;
         if (!session) return null;
         return auth.client.from('profiles')
-          .select('full_name, phone, business_name, city, preferred_language')
+          .select('full_name, phone, business_name, preferred_language, profile_completed_at')
           .eq('id', session.user.id)
           .maybeSingle()
           .then(function (p) {

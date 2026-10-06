@@ -77,9 +77,35 @@ Then, under **Authentication → Rate Limits**, raise "emails sent per hour" to 
 
 They use `{{ .ConfirmationURL }}`, which works with the site's login flow as-is.
 
-### 5. Protect your Supabase account
+### 5. Leaked password protection (recommended)
+
+Supabase's security advisor flags this as off. Under **Authentication → Attack Protection**, turn on **Leaked password protection**, which rejects passwords known from data breaches. It may require a paid plan.
+
+### 6. Protect your Supabase account
 
 Turn on multi-factor authentication for your own Supabase login (**Account → Security**). Whoever controls that account controls every customer's data.
+
+## Borrower profiles
+
+Each user creates their own profile at **`/profile.html`** in two steps:
+
+1. **About you:** profile photo (optional), full name, mobile number, preferred language
+2. **Your business:** business name, type, sector, city and town, registration number (optional), years trading, monthly revenue, number of employees, and a short description
+
+New sign-ups go straight to profile setup after confirming their email. Until a profile is complete, the account page shows a "Finish creating your profile" banner, and the application form links to it. Each step saves as soon as it's submitted, so nothing is lost if someone stops halfway.
+
+| Rule | Where it's enforced |
+|---|---|
+| A user can create, read and update **only their own** profile | RLS policies on `profiles` |
+| A profile is "complete" (`profile_completed_at`) only when name, phone, business name, type, sector, city, years trading and revenue are all filled in | Trigger `profiles_set_completed`; users can't set it themselves |
+| Only listed values are accepted for type, sector, city, revenue, etc. | CHECK constraints (lists also in `public/assets/js/imara-profile.js`) |
+| Profile photos are private, max 2 MB, JPG/PNG/WebP | Storage bucket `avatars` (not public) |
+| A user can only upload, view, replace or delete files in their own folder `avatars/<user id>/` | Storage RLS policies |
+| Photos are cropped to 512×512 and compressed in the browser before upload | `imara-profile.js` |
+
+Staff see every profile in **Table Editor → profiles**, and photos in **Storage → avatars**. To find the photo for a profile, open its `avatar_path`.
+
+To change a list of options (for example, add a sector), update the CHECK constraint in a new migration **and** the matching list in `public/assets/js/imara-profile.js`.
 
 ## Managing applications (staff)
 

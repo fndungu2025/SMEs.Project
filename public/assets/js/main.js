@@ -164,6 +164,14 @@
         if (lang) lang.checked = true;
       }
       note.textContent = 'Signed in as ' + acct.user.email + '. This application will be saved to your account.';
+      if (!p.profile_completed_at) {
+        note.appendChild(document.createTextNode(' '));
+        var link = document.createElement('a');
+        link.href = '/profile.html';
+        link.textContent = 'Finish your profile';
+        note.appendChild(link);
+        note.appendChild(document.createTextNode(' to speed up the call.'));
+      }
     });
   }
 

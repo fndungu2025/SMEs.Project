@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en-KE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create your profile — Imara Capital</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F2557">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/industry.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/vendor/supabase-js-2.117.2.js" defer></script>
+<script src="/assets/js/supabase-config.js" defer></script>
+<script src="/assets/js/imara-auth.js" defer></script>
+<script src="/assets/js/imara-profile.js" defer></script>
+<script src="/assets/js/profile.js" defer></script>
+</head>
+<body class="auth-page-loading">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="stripe" aria-hidden="true"></div>
+<header class="auth-header">
+  <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">I</span>Imara Capital</a>
+  <nav aria-label="Account navigation">
+    <a href="/account.html">My account</a>
+    <a href="/#calculator">Calculator</a>
+  </nav>
+</header>
+
+<main id="main" class="acct profile-page">
+  <p class="loading" id="loading" role="status">Loading your profile…</p>
+
+  <div data-requires-session>
+    <div class="acct-head">
+      <div>
+        <span class="auth-eyebrow" id="eyebrow">Step 1 of 2</span>
+        <h1 id="page-title">Create your profile.</h1>
+        <p class="who" id="page-lede">Tell us about you and your business. It takes about three minutes, and your officer will have what they need before they call.</p>
+      </div>
+      <div class="completion" aria-live="polite">
+        <span class="completion-label"><span id="completion-pct">0</span>% complete</span>
+        <div class="completion-bar" aria-hidden="true"><span id="completion-bar"></span></div>
+      </div>
+    </div>
+
+    <ol class="stepper" aria-label="Profile steps">
+      <li><button type="button" class="step-tab" data-step="1" aria-current="step"><span class="step-num">01</span>About you</button></li>
+      <li><button type="button" class="step-tab" data-step="2"><span class="step-num">02</span>Your business</button></li>
+    </ol>
+
+    <p class="notice" id="notice" role="status" aria-live="polite"></p>
+
+    <!-- Step 1: about you -->
+    <form id="step-1" class="blueprint acct-section profile-step" data-step-panel="1" novalidate>
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <h2>About you</h2>
+      <p class="sub">Fields marked <span class="req" aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
+
+      <div class="avatar-row">
+        <div class="avatar avatar-lg blueprint" id="avatar-box">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <img id="avatar-img" alt="" hidden>
+          <span id="avatar-initials" aria-hidden="true">?</span>
+        </div>
+        <div>
+          <p class="avatar-title">Profile photo <span class="opt">(optional)</span></p>
+          <p class="hint">A clear photo of your face helps your officer recognise you at the branch.</p>
+          <div class="acct-actions">
+            <input type="file" id="avatar-input" accept="image/jpeg,image/png,image/webp" class="sr-only">
+            <label class="btn btn-secondary file-btn" for="avatar-input" id="avatar-pick">Choose photo</label>
+            <button type="button" class="btn btn-ghost" id="avatar-remove" hidden>Remove</button>
+          </div>
+          <p class="notice" id="avatar-notice" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="auth-field"><label for="pf-name">Full name <span class="req">*</span></label><input class="input" id="pf-name" autocomplete="name" maxlength="120" required><span class="err">Enter your full name.</span></div>
+        <div class="auth-field"><label for="pf-phone">Mobile number <span class="req">*</span></label><input class="input" id="pf-phone" type="tel" autocomplete="tel" placeholder="07XX XXX XXX" required><span class="err">Enter a Kenyan mobile number, e.g. 0712 345 678.</span></div>
+        <div class="auth-field"><label for="pf-email">Email</label><input class="input" id="pf-email" type="email" readonly aria-describedby="pf-email-hint"><p class="hint" id="pf-email-hint">Change it on <a href="/account.html">My account</a>.</p></div>
+        <div class="auth-field"><span class="field-label" id="lang-label">Preferred language</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lang-label" style="display:flex">
+            <label class="seg-opt" style="flex:1;justify-content:center;min-height:46px"><input type="radio" name="pf-lang" value="Kiswahili" checked>Kiswahili</label>
+            <label class="seg-opt" style="flex:1;justify-content:center;min-height:46px"><input type="radio" name="pf-lang" value="English">English</label>
+          </div></div>
+      </div>
+
+      <div class="step-actions">
+        <span></span>
+        <button type="submit" class="btn btn-primary blueprint step-next" style="color:var(--color-bg)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Save &amp; continue</button>
+      </div>
+    </form>
+
+    <!-- Step 2: your business -->
+    <form id="step-2" class="blueprint acct-section profile-step" data-step-panel="2" novalidate hidden>
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <h2>Your business</h2>
+      <p class="sub">This is what we lend against: your trading record, not your property.</p>
+
+      <div class="form-grid">
+        <div class="auth-field span-2"><label for="pf-business">Business name <span class="req">*</span></label><input class="input" id="pf-business" autocomplete="organization" maxlength="160" required><span class="err">Enter your business name.</span></div>
+        <div class="auth-field"><label for="pf-type">Business type <span class="req">*</span></label><select class="input select" id="pf-type" required><option value="">Choose…</option></select><span class="err">Choose your business type.</span></div>
+        <div class="auth-field"><label for="pf-sector">What do you sell or do? <span class="req">*</span></label><select class="input select" id="pf-sector" required><option value="">Choose…</option></select><span class="err">Choose your sector.</span></div>
+        <div class="auth-field span-2"><span class="field-label" id="city-label">Where is your business? <span class="req">*</span></span>
+          <div class="seg seg-wrap" role="radiogroup" aria-labelledby="city-label" id="pf-city"></div>
+          <span class="err">Choose a city.</span></div>
+        <div class="auth-field"><label for="pf-town">Town or area</label><input class="input" id="pf-town" maxlength="80" placeholder="e.g. Gikomba, Kongowea"></div>
+        <div class="auth-field"><label for="pf-reg">Business registration number <span class="opt">(optional)</span></label><input class="input" id="pf-reg" maxlength="40" placeholder="e.g. BN-ABC1234"><span class="err">Use letters, numbers, slashes and dashes only.</span></div>
+        <div class="auth-field span-2"><span class="field-label" id="years-label">How long have you been trading? <span class="req">*</span></span>
+          <div class="seg seg-wrap" role="radiogroup" aria-labelledby="years-label" id="pf-years"></div>
+          <span class="err">Choose one.</span></div>
+        <div class="auth-field span-2"><span class="field-label" id="rev-label">Monthly revenue, in KSh <span class="req">*</span></span>
+          <div class="seg seg-wrap" role="radiogroup" aria-labelledby="rev-label" id="pf-revenue"></div>
+          <span class="err">Choose one.</span></div>
+        <div class="auth-field"><label for="pf-employees">People working in the business</label><select class="input select" id="pf-employees"><option value="">Choose…</option></select></div>
+        <div class="auth-field span-2"><label for="pf-desc">Describe your business <span class="opt">(optional)</span></label>
+          <textarea class="input" id="pf-desc" maxlength="500" rows="4" placeholder="What you sell, who your customers are, and what you'd use a loan for."></textarea>
+          <p class="hint"><span id="desc-count">0</span>/500</p></div>
+      </div>
+
+      <div class="step-actions">
+        <button type="button" class="btn btn-secondary" id="back-1" style="min-height:48px;padding:0 20px">Back</button>
+        <button type="submit" class="btn btn-primary blueprint step-next" id="finish-btn" style="color:var(--color-bg)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Create my profile</button>
+      </div>
+    </form>
+
+    <!-- Done -->
+    <section id="done" class="blueprint acct-section" hidden tabindex="-1" aria-labelledby="done-title">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <span class="tag" style="font-size:13px;font-weight:600;background:#DCFCE7;color:#166534">✓ Profile complete</span>
+      <h2 id="done-title" style="margin-top:16px">Asante. Your profile is ready.</h2>
+      <p class="sub">Your next application is pre-filled, and your officer sees these details before they call you.</p>
+      <div class="acct-actions">
+        <a href="/#calculator" class="btn btn-primary blueprint" style="color:var(--color-bg)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Run the numbers</a>
+        <a href="/account.html" class="btn btn-secondary">Go to my account</a>
+      </div>
+    </section>
+  </div>
+</main>
+</body>
+</html>

@@ -26,7 +26,6 @@
     submitted: 'Submitted', in_review: 'In review', offer_sent: 'Offer sent',
     disbursed: 'Disbursed', declined: 'Declined', withdrawn: 'Withdrawn'
   };
-  var PHONE_RE = /^(\+?254|0)[17]\d{8}$/;
 
   /* ---------- applications ---------- */
   function renderApps(rows) {
@@ -76,53 +75,52 @@
   function notice() { return $('notice'); }
 
   /* ---------- profile ---------- */
-  function fillProfile(p) {
+  function renderProfile(p) {
+    var P = window.ImaraProfile;
     p = p || {};
-    $('pf-name').value = p.full_name || (user.user_metadata && user.user_metadata.full_name) || '';
-    $('pf-phone').value = p.phone || '';
-    $('pf-business').value = p.business_name || '';
-    $('pf-city').value = p.city || '';
-    var lang = document.querySelector('input[name="pf-lang"][value="' + (p.preferred_language || 'Kiswahili') + '"]');
-    if (lang) lang.checked = true;
-    var first = ($('pf-name').value || '').split(/\s+/)[0];
+    var c = P.completion(p);
+    var name = p.full_name || (user.user_metadata && user.user_metadata.full_name) || '';
+    var first = name.split(/\s+/)[0];
     $('greeting').textContent = first ? 'Habari, ' + first + '.' : 'Karibu.';
+    $('pc-name').textContent = name || 'Your name';
+    $('pc-business').textContent = [p.business_name, p.sector].filter(Boolean).join(' · ') || 'No business details yet';
+    $('pc-place').textContent = [p.town, p.city].filter(Boolean).join(', ');
+    $('pc-initials').textContent = P.initials(name);
+    $('pc-pct').textContent = c.pct;
+    $('pc-bar').style.width = c.pct + '%';
+    $('pc-edit-label').textContent = c.complete ? 'Edit profile' : (c.done > 0 ? 'Finish my profile' : 'Create my profile');
+    $('profile-banner').hidden = !!p.profile_completed_at;
+
+    var facts = [['Phone', p.phone], ['Business type', p.business_type], ['Trading', p.years_trading],
+      ['Monthly revenue', p.monthly_revenue ? 'KSh ' + p.monthly_revenue : null], ['Language', p.preferred_language]];
+    var dl = $('pc-facts'); dl.textContent = '';
+    facts.forEach(function (f) {
+      if (!f[1]) return;
+      var dt = document.createElement('dt'); dt.textContent = f[0];
+      var dd = document.createElement('dd'); dd.textContent = f[1];
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+
+    var img = $('pc-img');
+    if (!p.avatar_path) { img.hidden = true; $('pc-initials').hidden = false; return; }
+    P.avatarUrl(p.avatar_path).then(function (url) {
+      if (!url) return;
+      img.src = url; img.alt = 'Profile photo'; img.hidden = false; $('pc-initials').hidden = true;
+    });
   }
 
   function loadProfile() {
-    return sb.from('profiles')
-      .select('full_name, phone, business_name, city, preferred_language')
-      .eq('id', user.id)
-      .maybeSingle()
-      .then(function (res) {
-        if (res.error) { say(notice(), 'err', A.friendlyError(res.error)); return; }
-        fillProfile(res.data);
-      });
+    return window.ImaraProfile.load(user.id).then(function (p) {
+      // New sign-ups land here from the confirmation email: take them
+      // straight to creating their profile.
+      if (params.get('welcome') && (!p || !p.profile_completed_at)) {
+        leaving = true;
+        location.replace('/profile.html?welcome=1');
+        return;
+      }
+      renderProfile(p);
+    }).catch(function (err) { say(notice(), 'err', A.friendlyError(err)); });
   }
-
-  $('details-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var dn = $('details-notice'); clear(dn);
-    var name = $('pf-name'), phone = $('pf-phone');
-    name.value = name.value.trim();
-    phone.value = phone.value.replace(/[\s-]/g, '');
-    var ok = mark(name, name.value.length > 0) & mark(phone, !phone.value || PHONE_RE.test(phone.value));
-    if (!ok) { this.querySelector('.invalid .input').focus(); return; }
-    var btn = this.querySelector('button[type="submit"]');
-    busy(btn, true);
-    sb.from('profiles').update({
-      full_name: name.value,
-      phone: phone.value || null,
-      business_name: $('pf-business').value.trim() || null,
-      city: $('pf-city').value || null,
-      preferred_language: document.querySelector('input[name="pf-lang"]:checked').value
-    }).eq('id', user.id).then(function (res) {
-      busy(btn, false);
-      if (res.error) { say(dn, 'err', A.friendlyError(res.error)); return; }
-      say(dn, 'ok', 'Saved. Your next application will use these details.');
-      var first = name.value.split(/\s+/)[0];
-      $('greeting').textContent = 'Habari, ' + first + '.';
-    });
-  });
 
   /* ---------- password ---------- */
   $('password-form').addEventListener('submit', function (e) {
@@ -180,15 +178,20 @@
     if (!session) { goLogin(linkError ? 'expired' : 'session'); return; }
     user = session.user;
     // Remove tokens or flags from the address bar.
-    if (location.hash || location.search) history.replaceState(null, '', location.pathname);
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     $('who').textContent = 'Logged in as ' + user.email;
-    $('loading').hidden = true;
-    document.body.classList.remove('auth-page-loading');
-    if (params.get('welcome')) say(notice(), 'ok', 'Your email is confirmed. Welcome to Imara Capital.');
-    else if (params.get('email-changed')) say(notice(), 'ok', 'Email confirmed. If you were asked to confirm on both addresses, open the other link too.');
-    else if (linkError) say(notice(), 'err', A.friendlyError({ code: linkError.code }));
-    loadProfile();
-    loadApps();
+    // Reveal the page only once we know we're staying (new sign-ups are
+    // sent on to profile setup without a flash of this page).
+    loadProfile().then(function () {
+      if (leaving) return;
+      $('loading').hidden = true;
+      document.body.classList.remove('auth-page-loading');
+      if (params.get('welcome')) say(notice(), 'ok', 'Your email is confirmed. Welcome to Imara Capital.');
+      else if (params.get('email-changed')) say(notice(), 'ok', 'Email confirmed. If you were asked to confirm on both addresses, open the other link too.');
+      else if (linkError) say(notice(), 'err', A.friendlyError({ code: linkError.code }));
+      if (location.search) history.replaceState(null, '', location.pathname);
+      loadApps();
+    });
   });
 
   sb.auth.onAuthStateChange(function (event, session) {
