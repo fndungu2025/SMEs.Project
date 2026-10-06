@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en-KE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in — Imara Capital</title>
+<meta name="description" content="Log in to your Imara Capital account to track your business loan application.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F2557">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/industry.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/vendor/supabase-js-2.117.2.js" defer></script>
+<script src="/assets/js/supabase-config.js" defer></script>
+<script src="/assets/js/imara-auth.js" defer></script>
+<script src="/assets/js/login.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="stripe" aria-hidden="true"></div>
+<header class="auth-header">
+  <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">I</span>Imara Capital</a>
+  <nav aria-label="Main navigation"><a href="/#calculator">Calculator</a><a href="/#eligibility">Eligibility</a><a href="/#faq">FAQ</a></nav>
+</header>
+
+<main id="main" class="auth-wrap">
+  <section aria-labelledby="intro-title">
+    <span class="auth-eyebrow">Your Imara account</span>
+    <h1 class="auth-title" id="intro-title">Your loan, in one place.</h1>
+    <p class="auth-lede">Log in with your email to see every application you've sent, where it stands, and the details your officer has on file.</p>
+    <ul class="auth-points">
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Track each application from submitted to disbursed</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Keep your phone and business details up to date</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Apply faster next time, with your details pre-filled</li>
+    </ul>
+  </section>
+
+  <section class="blueprint auth-card" aria-labelledby="card-title">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+
+    <div class="seg" role="radiogroup" aria-label="Log in or create an account">
+      <label class="seg-opt"><input type="radio" name="mode-tab" value="signin" checked>Log in</label>
+      <label class="seg-opt"><input type="radio" name="mode-tab" value="signup">Create account</label>
+    </div>
+
+    <p class="notice" id="notice" role="status" aria-live="polite"></p>
+
+    <!-- Log in -->
+    <form id="form-signin" data-mode="signin" novalidate>
+      <h2 id="card-title">Log in</h2>
+      <p class="sub">Use the email and password you signed up with.</p>
+      <div class="auth-field"><label for="si-email">Email</label><input class="input" id="si-email" type="email" autocomplete="email" inputmode="email" required><span class="err">Enter a valid email address.</span></div>
+      <div class="auth-field"><label for="si-password">Password</label>
+        <div class="pw-wrap"><input class="input" id="si-password" type="password" autocomplete="current-password" required><button type="button" class="pw-toggle" data-toggle-password="si-password" aria-pressed="false" aria-label="Show password">Show</button></div>
+        <span class="err">Enter your password.</span></div>
+      <div class="auth-row"><a href="#forgot" class="link-btn">Forgot password?</a><a href="#link" class="link-btn">Email me a log-in link</a></div>
+      <button type="submit" class="btn btn-primary blueprint auth-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Log in</button>
+      <p class="auth-alt">New to Imara? <a href="#signup" class="link-btn">Create an account</a></p>
+    </form>
+
+    <!-- Create account -->
+    <form id="form-signup" data-mode="signup" novalidate hidden>
+      <h2>Create account</h2>
+      <p class="sub">We'll email you a link to confirm your address.</p>
+      <div class="auth-field"><label for="su-name">Full name</label><input class="input" id="su-name" autocomplete="name" maxlength="120" required><span class="err">Enter your name.</span></div>
+      <div class="auth-field"><label for="su-email">Email</label><input class="input" id="su-email" type="email" autocomplete="email" inputmode="email" required><span class="err">Enter a valid email address.</span></div>
+      <div class="auth-field"><label for="su-password">Password</label>
+        <div class="pw-wrap"><input class="input" id="su-password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="su-password-hint"><button type="button" class="pw-toggle" data-toggle-password="su-password" aria-pressed="false" aria-label="Show password">Show</button></div>
+        <div class="pw-meter" aria-hidden="true"><span id="su-meter"></span></div>
+        <p class="hint" id="su-password-hint">At least 8 characters. Mix letters and numbers.</p>
+        <span class="err">Use at least 8 characters, with letters and numbers.</span></div>
+      <div class="auth-field"><label for="su-password2">Confirm password</label><input class="input" id="su-password2" type="password" autocomplete="new-password" required><span class="err">The passwords don't match.</span></div>
+      <button type="submit" class="btn btn-primary blueprint auth-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Create my account</button>
+      <p class="auth-alt">Already have an account? <a href="#signin" class="link-btn">Log in</a></p>
+    </form>
+
+    <!-- Forgot password -->
+    <form id="form-forgot" data-mode="forgot" novalidate hidden>
+      <h2>Reset password</h2>
+      <p class="sub">Enter your email and we'll send you a link to choose a new password.</p>
+      <div class="auth-field"><label for="fp-email">Email</label><input class="input" id="fp-email" type="email" autocomplete="email" inputmode="email" required><span class="err">Enter a valid email address.</span></div>
+      <button type="submit" class="btn btn-primary blueprint auth-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Send reset link</button>
+      <p class="auth-alt"><a href="#signin" class="link-btn">Back to log in</a></p>
+    </form>
+
+    <!-- Magic link -->
+    <form id="form-link" data-mode="link" novalidate hidden>
+      <h2>Email me a link</h2>
+      <p class="sub">No password needed. We'll email you a one-time link that logs you straight in.</p>
+      <div class="auth-field"><label for="ml-email">Email</label><input class="input" id="ml-email" type="email" autocomplete="email" inputmode="email" required><span class="err">Enter a valid email address.</span></div>
+      <button type="submit" class="btn btn-primary blueprint auth-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Send log-in link</button>
+      <p class="auth-alt"><a href="#signin" class="link-btn">Log in with a password instead</a></p>
+    </form>
+
+    <!-- Check your email -->
+    <div id="panel-sent" data-mode="sent" hidden tabindex="-1">
+      <span class="tag" style="font-size:13px;font-weight:600;background:#DCFCE7;color:#166534">✓ Email sent</span>
+      <h2 style="margin-top:16px">Check your email</h2>
+      <p class="sub" id="sent-text"></p>
+      <p class="sub">Can't find it? Check your spam folder. The link works once, so use the most recent email.</p>
+      <div class="acct-actions">
+        <button type="button" class="btn btn-secondary" id="resend-btn">Send it again</button>
+        <a href="#signin" class="btn btn-ghost">Back to log in</a>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!-- Subject: Confirm your Imara Capital account -->
+<!doctype html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f2f2f3;font-family:Arial,Helvetica,sans-serif;color:#1d1f20">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f3;padding:32px 12px">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid #d4d4d7">
+        <tr><td style="height:4px;background:#0F2557;font-size:0;line-height:0">&nbsp;</td></tr>
+        <tr><td style="padding:28px 32px 8px">
+          <p style="margin:0;font-size:16px;font-weight:bold;letter-spacing:2px;text-transform:uppercase">Imara Capital</p>
+        </td></tr>
+        <tr><td style="padding:8px 32px 0">
+          <h1 style="margin:0 0 12px;font-size:26px;line-height:1.2;text-transform:uppercase">Confirm your email</h1>
+          <p style="margin:0 0 24px;font-size:15px;line-height:24px;color:#424244">Karibu! Tap the button below to confirm {{ .Email }} and finish setting up your Imara Capital account.</p>
+          <table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:#5980a6">
+            <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none">Confirm my email</a>
+          </td></tr></table>
+          <p style="margin:24px 0 0;font-size:13px;line-height:20px;color:#5d5d60">This link works once. If you didn't create an account, you can ignore this email.</p>
+          <p style="margin:12px 0 0;font-size:12px;line-height:18px;color:#7a7a7d;word-break:break-all">If the button doesn't work, copy this link into your browser:<br><a href="{{ .ConfirmationURL }}" style="color:#416180">{{ .ConfirmationURL }}</a></p>
+        </td></tr>
+        <tr><td style="padding:24px 32px 28px">
+          <p style="margin:0;padding-top:16px;border-top:1px solid #e7e7ea;font-size:12px;line-height:18px;color:#7a7a7d">Imara Capital · Nairobi · Mombasa · Nakuru · Eldoret<br>We will never ask for your password or PIN by phone, SMS or email.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

@@ -73,3 +73,80 @@ body.dialog-open{overflow:hidden}
 /* Eligibility result states stack like the design's flex column */
 #elig-pending,#elig-ok,#elig-no{display:flex;flex-direction:column}
 [hidden]{display:none!important}
+
+/* ============ ACCOUNTS (Supabase email login) ============ */
+.nav-login-mobile{display:none}
+@media (max-width:640px){ .nav-login-mobile{display:inline;font-weight:600;color:var(--color-accent-700)!important} }
+.app-account-note{font-size:13px;line-height:20px;margin:0 0 10px;color:color-mix(in srgb,var(--color-text) 78%,transparent)}
+.app-account-note:empty{display:none}
+
+.auth-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:14px clamp(16px,5vw,72px);border-bottom:1px solid var(--color-divider)}
+.auth-header .brand{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-heading);font-weight:600;font-size:20px;letter-spacing:0.04em;text-transform:uppercase;color:var(--color-text);text-decoration:none}
+.auth-header .brand-mark{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--color-text);font-size:15px;line-height:1}
+.auth-header nav{display:flex;gap:18px;align-items:center;font-size:14px}
+.auth-header nav a{color:inherit;text-decoration:none}
+.auth-header nav a:hover{color:var(--color-accent-700)}
+
+.auth-wrap{max-width:1100px;margin:0 auto;padding:56px clamp(16px,5vw,72px) 80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px clamp(32px,5vw,80px);align-items:start}
+.auth-eyebrow{display:block;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-700);margin:0 0 12px}
+.auth-title{font-size:clamp(36px,5vw,56px);line-height:1.02;text-transform:uppercase;letter-spacing:0.01em;margin:0 0 16px}
+.auth-lede{font-size:16px;line-height:26px;max-width:44ch;color:color-mix(in srgb,var(--color-text) 80%,transparent);margin:0 0 24px}
+.auth-points{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:15px}
+.auth-points li{display:flex;gap:10px;align-items:flex-start}
+.auth-points svg{flex:none;margin-top:3px}
+
+.auth-card{padding:32px}
+.auth-card .seg{display:flex;margin-bottom:24px}
+.auth-card .seg-opt{flex:1;justify-content:center;min-height:44px;font-size:15px}
+.auth-card h2{font-size:28px;text-transform:uppercase;margin:0 0 6px}
+.auth-card .sub{font-size:14px;line-height:22px;margin:0 0 20px;color:color-mix(in srgb,var(--color-text) 75%,transparent)}
+.auth-field{margin-bottom:16px}
+.auth-field > label{display:block;font-size:13px;margin-bottom:6px;color:color-mix(in srgb,var(--color-text) 75%,transparent)}
+.auth-field .input{min-height:46px;font-size:16px;background:transparent}
+.auth-field .hint{font-size:12.5px;margin-top:5px;color:color-mix(in srgb,var(--color-text) 65%,transparent)}
+.auth-field .err{display:none;font-size:13px;margin-top:5px;color:#B91C1C}
+.auth-field.invalid .input{border-color:#B91C1C}
+.auth-field.invalid .err{display:block}
+.pw-wrap{position:relative}
+.pw-wrap .input{padding-right:64px}
+.pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0!important;background:transparent;font-family:var(--font-heading);font-weight:600;font-size:13px;color:var(--color-accent-700);cursor:pointer;padding:6px 8px}
+.auth-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:-4px 0 16px;font-size:14px}
+.link-btn{background:none;border:0;padding:0;font:inherit;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.link-btn:hover{color:var(--color-accent-800)}
+.auth-submit{min-height:48px;font-size:17px;width:100%;color:var(--color-bg)!important}
+.auth-alt{margin-top:20px;padding-top:16px;border-top:1px solid var(--color-divider);font-size:14px;text-align:center}
+.notice{padding:12px 14px;font-size:14px;line-height:21px;margin:0 0 16px;border:1px solid}
+.notice-ok{background:#ECFDF5;border-color:#A7F3D0;color:#065F46}
+.notice-err{background:#FEF2F2;border-color:#FECACA;color:#991B1B}
+.notice-info{background:var(--color-accent-100);border-color:var(--color-accent-300);color:var(--color-accent-900)}
+.notice:empty{display:none}
+.notice a,.notice .link-btn{color:inherit;font-weight:600}
+.pw-meter{height:4px;margin-top:6px;border:1px solid var(--color-divider);position:relative}
+.pw-meter span{position:absolute;inset:0 auto 0 0;width:0;transition:width 150ms,background 150ms}
+button.btn[aria-busy="true"]{opacity:0.7;cursor:progress}
+
+/* Account page */
+.acct{max-width:1100px;margin:0 auto;padding:48px clamp(16px,5vw,72px) 80px}
+.acct-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:40px}
+.acct-head h1{font-size:clamp(36px,5vw,56px);line-height:1.02;text-transform:uppercase;margin:0}
+.acct-head .who{font-size:15px;margin:8px 0 0;color:color-mix(in srgb,var(--color-text) 75%,transparent);word-break:break-all}
+.acct-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px}
+.acct-section{padding:28px}
+.acct-section h2{font-size:24px;text-transform:uppercase;margin:0 0 4px}
+.acct-section .sub{font-size:14px;margin:0 0 20px;color:color-mix(in srgb,var(--color-text) 72%,transparent)}
+.acct-wide{grid-column:1/-1}
+.apps-table td,.apps-table th{white-space:nowrap}
+.status{display:inline-flex;font-size:12px;font-weight:600;padding:3px 10px;letter-spacing:0.02em}
+.status-submitted{background:var(--color-accent-100);color:var(--color-accent-800)}
+.status-in_review{background:#FEF3C7;color:#92400E}
+.status-offer_sent{background:#DBEAFE;color:#1E3A8A}
+.status-disbursed{background:#DCFCE7;color:#166534}
+.status-declined{background:#FEE2E2;color:#991B1B}
+.status-withdrawn{background:var(--color-neutral-200);color:var(--color-neutral-800)}
+.empty{padding:24px;border:1px dashed var(--color-divider);text-align:center;font-size:15px}
+.empty p{margin:0 0 14px}
+.loading{font-size:14px;color:color-mix(in srgb,var(--color-text) 65%,transparent)}
+.acct-actions{display:flex;gap:10px;flex-wrap:wrap}
+.acct-actions .btn{min-height:44px;padding:0 18px}
+.select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.auth-page-loading [data-requires-session]{visibility:hidden}

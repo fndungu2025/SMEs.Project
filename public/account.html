@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-KE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My account — Imara Capital</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F2557">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/industry.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/vendor/supabase-js-2.117.2.js" defer></script>
+<script src="/assets/js/supabase-config.js" defer></script>
+<script src="/assets/js/imara-auth.js" defer></script>
+<script src="/assets/js/account.js" defer></script>
+</head>
+<body class="auth-page-loading">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="stripe" aria-hidden="true"></div>
+<header class="auth-header">
+  <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">I</span>Imara Capital</a>
+  <nav aria-label="Account navigation">
+    <a href="/#calculator">Calculator</a>
+    <a href="/#eligibility">Apply</a>
+    <button type="button" class="btn btn-secondary" id="signout-btn" style="min-height:36px;padding:0 14px" data-requires-session>Log out</button>
+  </nav>
+</header>
+
+<main id="main" class="acct">
+  <p class="loading" id="loading" role="status">Loading your account…</p>
+
+  <div data-requires-session>
+    <p class="notice" id="notice" role="status" aria-live="polite"></p>
+
+    <div class="acct-head">
+      <div>
+        <span class="auth-eyebrow">My account</span>
+        <h1 id="greeting">Karibu.</h1>
+        <p class="who" id="who"></p>
+      </div>
+      <a href="/#eligibility" class="btn btn-primary blueprint" style="min-height:48px;font-size:17px;padding:0 24px;color:var(--color-bg)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>New application</a>
+    </div>
+
+    <div class="acct-grid">
+      <section class="blueprint acct-section acct-wide" aria-labelledby="apps-title">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <h2 id="apps-title">My applications</h2>
+        <p class="sub">Applications you sent while logged in. Your officer updates the status as it moves.</p>
+        <div id="apps"><p class="loading">Loading applications…</p></div>
+      </section>
+
+      <section class="blueprint acct-section" aria-labelledby="details-title">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <h2 id="details-title">My details</h2>
+        <p class="sub">We pre-fill your applications with these.</p>
+        <p class="notice" id="details-notice" role="status" aria-live="polite"></p>
+        <form id="details-form" novalidate>
+          <div class="auth-field"><label for="pf-name">Full name</label><input class="input" id="pf-name" autocomplete="name" maxlength="120"><span class="err">Enter your name.</span></div>
+          <div class="auth-field"><label for="pf-phone">Phone number</label><input class="input" id="pf-phone" type="tel" autocomplete="tel" placeholder="07XX XXX XXX"><span class="err">Enter a Kenyan mobile number, e.g. 0712 345 678.</span></div>
+          <div class="auth-field"><label for="pf-business">Business name</label><input class="input" id="pf-business" autocomplete="organization" maxlength="160"></div>
+          <div class="auth-field"><label for="pf-city">Where is your business?</label>
+            <select class="input select" id="pf-city">
+              <option value="">Choose…</option><option>Nairobi</option><option>Mombasa</option><option>Nakuru</option><option>Eldoret</option><option>Elsewhere</option>
+            </select></div>
+          <div class="auth-field"><label>Preferred language</label>
+            <div class="seg" role="radiogroup" aria-label="Preferred language" style="display:flex">
+              <label class="seg-opt" style="flex:1;justify-content:center;min-height:42px"><input type="radio" name="pf-lang" value="Kiswahili" checked>Kiswahili</label>
+              <label class="seg-opt" style="flex:1;justify-content:center;min-height:42px"><input type="radio" name="pf-lang" value="English">English</label>
+            </div></div>
+          <button type="submit" class="btn btn-primary blueprint auth-submit"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Save details</button>
+        </form>
+      </section>
+
+      <section class="blueprint acct-section" aria-labelledby="security-title">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <h2 id="security-title">Log-in &amp; security</h2>
+        <p class="sub">Change how you log in.</p>
+        <p class="notice" id="security-notice" role="status" aria-live="polite"></p>
+
+        <form id="password-form" novalidate>
+          <div class="auth-field"><label for="np-password">New password</label>
+            <div class="pw-wrap"><input class="input" id="np-password" type="password" autocomplete="new-password" minlength="8"><button type="button" class="pw-toggle" data-toggle-password="np-password" aria-pressed="false" aria-label="Show password">Show</button></div>
+            <p class="hint">At least 8 characters. Mix letters and numbers.</p>
+            <span class="err">Use at least 8 characters, with letters and numbers.</span></div>
+          <div class="auth-field"><label for="np-password2">Confirm new password</label><input class="input" id="np-password2" type="password" autocomplete="new-password"><span class="err">The passwords don't match.</span></div>
+          <button type="submit" class="btn btn-secondary" style="min-height:44px;padding:0 18px">Change password</button>
+        </form>
+
+        <div style="height:1px;background:var(--color-divider);margin:24px 0"></div>
+
+        <form id="email-form" novalidate>
+          <div class="auth-field"><label for="ne-email">New email address</label><input class="input" id="ne-email" type="email" autocomplete="email" inputmode="email"><span class="err">Enter a valid email address that's different from your current one.</span></div>
+          <button type="submit" class="btn btn-secondary" style="min-height:44px;padding:0 18px">Change email</button>
+        </form>
+
+        <div style="height:1px;background:var(--color-divider);margin:24px 0"></div>
+
+        <div class="acct-actions">
+          <button type="button" class="btn btn-secondary" id="signout-here">Log out</button>
+          <button type="button" class="btn btn-ghost" id="signout-all">Log out on all devices</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+</body>
+</html>

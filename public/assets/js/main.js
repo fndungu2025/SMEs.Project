@@ -138,11 +138,35 @@
     if (loc !== null) parts.push(LOCS[loc]);
     if (rb !== null) parts.push('revenue ' + REVS[rb]);
     $('app-summary').textContent = parts.join(' · ');
+    prefillFromAccount();
     lastFocus = document.activeElement;
     dialog.hidden = false;
     document.body.classList.add('dialog-open');
     $('app-name').focus();
   }
+  /* Signed-in visitors: fill empty fields from their profile and say where
+     the application will be saved. Works without an account too. */
+  function prefillFromAccount() {
+    var note = $('app-account-note');
+    if (!window.ImaraAccount) return;
+    window.ImaraAccount.ready.then(function (acct) {
+      if (!acct) {
+        note.innerHTML = 'Have an account? <a href="/login.html?next=%2F%23eligibility">Log in</a> to track this application.';
+        return;
+      }
+      var p = acct.profile || {};
+      [['app-name', p.full_name], ['app-phone', p.phone], ['app-business', p.business_name]].forEach(function (pair) {
+        var input = $(pair[0]);
+        if (!input.value && pair[1]) input.value = pair[1];
+      });
+      if (p.preferred_language) {
+        var lang = form.querySelector('input[name="language"][value="' + p.preferred_language + '"]');
+        if (lang) lang.checked = true;
+      }
+      note.textContent = 'Signed in as ' + acct.user.email + '. This application will be saved to your account.';
+    });
+  }
+
   function closeDialog() {
     dialog.hidden = true;
     document.body.classList.remove('dialog-open');
@@ -198,6 +222,29 @@
       body: new URLSearchParams(new FormData(form)).toString()
     }).then(function (res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
+      // The officer is already notified via Netlify; saving to the account is
+      // a bonus, so a failure there must not undo the success state.
+      var save = window.ImaraAccount ? window.ImaraAccount.saveApplication({
+        full_name: $('app-name').value,
+        phone: $('app-phone').value,
+        business_name: $('app-business').value,
+        preferred_language: (form.querySelector('input[name="language"]:checked') || {}).value || 'Kiswahili',
+        amount_ksh: calc.principal,
+        term_months: calc.term,
+        location: $('app-location').value || null,
+        revenue_band: $('app-revband').value || null,
+        time_trading: $('app-age').value || null
+      }) : Promise.resolve(null);
+      return save.then(function (id) { return { saved: !!id }; }, function () { return { saved: false, failed: true }; });
+    }).then(function (result) {
+      var acctMsg = $('app-done-account');
+      if (result.saved) {
+        acctMsg.innerHTML = 'Saved to your account. <a href="/account.html">Track it in My account</a>.';
+        acctMsg.hidden = false;
+      } else if (result.failed) {
+        acctMsg.textContent = 'We received your request, but couldn\u2019t add it to your account page. Your officer will still call.';
+        acctMsg.hidden = false;
+      }
       $('app-form-wrap').hidden = true;
       $('app-done').hidden = false;
       $('app-done').focus();

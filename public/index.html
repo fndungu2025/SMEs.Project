@@ -18,6 +18,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;600&display=swap">
 <link rel="stylesheet" href="/assets/css/industry.css">
 <link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/supabase-config.js" defer></script>
+<script src="/assets/js/session-hint.js" defer></script>
+<script src="/assets/js/account-bridge.js" defer></script>
 <script src="/assets/js/main.js" defer></script>
 </head>
 <body>
@@ -35,9 +38,10 @@
     <a href="#eligibility">Eligibility</a>
     <a href="#stories">Stories</a>
     <a href="#faq">FAQ</a>
+    <a href="/login.html" class="nav-login-mobile" data-auth-link>Log in</a>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
-    <a href="#" class="btn btn-ghost" style="min-height:40px">Log in</a>
+    <a href="/login.html" class="btn btn-ghost" data-auth-link style="min-height:40px">Log in</a>
     <a href="#eligibility" class="btn btn-primary blueprint" style="min-height:40px;color:var(--color-bg);padding-inline:16px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Check eligibility</a>
   </div>
 </nav>
@@ -354,7 +358,7 @@
       <span style="font-family:var(--font-heading);font-weight:600;font-size:20px;letter-spacing:0.04em;text-transform:uppercase;color:var(--color-text)">Imara Capital</span>
       <span style="max-width:28ch;line-height:22px">Imara means strong, firm, steady. So are our borrowers.</span>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px"><strong style="color:var(--color-text);font-weight:600">Borrow</strong><a href="#how">How it works</a><a href="#calculator">Loan calculator</a><a href="#eligibility">Eligibility</a><a href="#faq">FAQ</a></div>
+    <div style="display:flex;flex-direction:column;gap:8px"><strong style="color:var(--color-text);font-weight:600">Borrow</strong><a href="/login.html" data-auth-link>Log in</a><a href="#how">How it works</a><a href="#calculator">Loan calculator</a><a href="#eligibility">Eligibility</a><a href="#faq">FAQ</a></div>
     <div style="display:flex;flex-direction:column;gap:8px"><strong style="color:var(--color-text);font-weight:600">Branches</strong><span>Nairobi</span><span>Mombasa</span><span>Nakuru</span><span>Eldoret</span></div>
     <div style="display:flex;flex-direction:column;gap:8px"><strong style="color:var(--color-text);font-weight:600">Company</strong><a href="#">About</a><a href="#eligibility">Contact</a><a href="/privacy.html#complaints">Licensing &amp; complaints</a><a href="/privacy.html">Privacy policy</a></div>
   </div>
@@ -388,6 +392,7 @@
           </div>
         </div>
         <label class="consent"><input type="checkbox" name="consent" value="yes" id="app-consent" required> <span>I agree to be contacted about my application and have read the <a href="/privacy.html" target="_blank" rel="noopener">privacy policy</a>.</span></label>
+        <p class="app-account-note" id="app-account-note"></p>
         <p class="app-summary" id="app-summary"></p>
         <p class="form-error" id="app-error" role="alert" hidden></p>
         <button type="submit" class="btn btn-primary blueprint btn-block" id="app-submit" style="min-height:48px;font-size:17px;color:var(--color-bg)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Request my call back</button>
@@ -397,6 +402,7 @@
       <span class="tag" style="font-size:13px;font-weight:600;background:#DCFCE7;color:#166534">✓ Received</span>
       <h2 style="font-size:32px;text-transform:uppercase;margin:16px 0 8px">Asante. We'll call you today.</h2>
       <p class="dialog-body">An Imara officer will call you the same business day to go through the documents and give you a written timeline.</p>
+      <p class="app-account-note" id="app-done-account" hidden></p>
       <div class="dialog-actions"><button type="button" class="btn btn-secondary" id="app-done-close" style="min-height:44px;padding:0 18px">Close</button></div>
     </div>
   </div>
